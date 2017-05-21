@@ -541,7 +541,7 @@ class IRCClient(asyncio.Protocol):
     """
 
     def _get_channels(self):
-        return iter(self._state.channels.keys())
+        return iter(list(self._state.channels.keys()))
 
     channels = property(_get_channels)
     """ Names of channels this client is currently in (*read-only*).

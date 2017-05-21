@@ -105,7 +105,7 @@ class MessageProcessor(object):
                 if target.nick and target.nick == self._state.nick:
                     self._handler.handle_private_message(msg, sender)
                 elif target.channel and \
-                     target.channel in self._state.channels.keys():
+                     target.channel in list(self._state.channels.keys()):
                     self._handler.handle_channel_message(
                             target.channel, msg, sender)
 
@@ -156,7 +156,7 @@ class MessageProcessor(object):
         nick = parsing.parse_user_prefix(prefix)[0]
         channel = params[0]
         if self._state.nick == nick:
-            if channel not in self._state.channels.keys():
+            if channel not in list(self._state.channels.keys()):
                 self._pending_channel_info[channel] = ChannelInfo(channel)
         else:
             self._state.channels[channel]._add_nicks(nick)
@@ -166,7 +166,7 @@ class MessageProcessor(object):
         nick = parsing.parse_user_prefix(prefix)[0]
         channel = params[0]
         if self._state.nick == nick:
-            if channel in self._state.channels.keys():
+            if channel in list(self._state.channels.keys()):
                 del self._state.channels[channel]
             self._handler.handle_own_part(channel)
         else:
@@ -179,7 +179,7 @@ class MessageProcessor(object):
     def _process_nick(self, prefix, params):
         old_nick = parsing.parse_user_prefix(prefix)[0]
         new_nick = params[0]
-        for channel_info in self._state.channels.values():
+        for channel_info in list(self._state.channels.values()):
             if old_nick in channel_info.nicks:
                 channel_info._remove_nick(old_nick)
                 channel_info._add_nicks(new_nick)
@@ -242,7 +242,7 @@ class MessageProcessor(object):
         initiator = parsing.parse_user_prefix(prefix)[0]
         reason = params[2] if len(params) > 2 else None
         if nick == self._state.nick:
-            if channel in self._state.channels.keys():
+            if channel in list(self._state.channels.keys()):
                 del self._state.channels[channel]
             self._handler.handle_own_kick(channel, initiator, reason)
         else:
@@ -266,7 +266,7 @@ class MessageProcessor(object):
         quit_message = None
         if len(params) > 0:
             quit_message = params[0]
-        for channel_info in self._state.channels.values():
+        for channel_info in list(self._state.channels.values()):
             if nick in channel_info.nicks:
                 channel_info._remove_nick(nick)
         self._handler.handle_quit(nick, quit_message)

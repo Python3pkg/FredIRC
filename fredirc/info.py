@@ -83,10 +83,10 @@ class _ReadOnlyDict(collections.Mapping):
         return iter(self._data)
 
     def items(self):
-        return self._data.items()
+        return list(self._data.items())
 
     def keys(self):
-        return self._data.keys()
+        return list(self._data.keys())
 
     def values(self):
-        return self._data.values()
+        return list(self._data.values())
